@@ -18,7 +18,6 @@ public class AgePickerFragment extends DialogFragment {
 
     private static final String ARG_AGE = "age";
 
-    public static final String EXTRA_AGE = "com.pesiik.samsmu.suicidetest.age";
 
     private OnSelectedAgeListener mCallback;
 
