@@ -7,10 +7,12 @@ public class Question {
     private boolean mIsSevenAnswers;
     private boolean hasAnswer;
     private int answerPosition;
+    private Type mType;
 
-    public Question(String text, boolean isSixAnswers) {
+    public Question(String text, boolean isSixAnswers, Type type) {
         mText = text;
         mIsSevenAnswers = isSixAnswers;
+        mType = type;
         hasAnswer = false;
         answerPosition = -1;
     }
@@ -47,5 +49,21 @@ public class Question {
 
     public void setAnswerPosition(int answerPosition) {
         this.answerPosition = answerPosition;
+    }
+
+    public Type getType() {
+        return mType;
+    }
+
+    public void setType(Type type) {
+        mType = type;
+    }
+
+    public enum Type{
+        adaptability,
+        escapism,
+        depression,
+        none
+
     }
 }

@@ -10,18 +10,22 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
 import com.pesiik.samsmu.suicidetest.model.Question;
 import com.pesiik.samsmu.suicidetest.model.QuestionLab;
 
 import java.util.List;
 
-public class QuestionPagerActivity extends AppCompatActivity {
+public class QuestionPagerActivity extends AppCompatActivity implements QuestionFragment.Callbacks {
 
     protected static final String EXTRA_QUESTION_POSITION = "com.pesiik.samsmu.suicidetest.question_position";
 
     private ViewPager mViewPager;
     private List<Question> mQuestions;
+
+    private Button mEndButton;
 
     public static Intent newIntent(Context packageContext, int position){
         Intent intent = new Intent(packageContext, QuestionPagerActivity.class);
@@ -52,11 +56,22 @@ public class QuestionPagerActivity extends AppCompatActivity {
             }
         });
 
+
+        mEndButton = findViewById(R.id.end_test_button);
+        mEndButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = ResultActivity.newIntent(getApplicationContext());
+                startActivity(intent);
+            }
+        });
+
         mViewPager.setCurrentItem(position);
     }
 
 
-
-
-
+    @Override
+    public void onCheckEndButtonActivity(boolean isEndButtonActive) {
+        mEndButton.setEnabled(isEndButtonActive);
+    }
 }

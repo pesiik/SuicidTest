@@ -1,6 +1,6 @@
 package com.pesiik.samsmu.suicidetest;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,15 +8,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.pesiik.samsmu.suicidetest.model.Question;
 import com.pesiik.samsmu.suicidetest.model.QuestionLab;
-
-import java.util.List;
 
 public class QuestionFragment extends Fragment {
 
@@ -26,9 +23,22 @@ public class QuestionFragment extends Fragment {
     private Question mQuestion;
     private TextView mTextQuestion;
     private TextView mNumberQuestion;
-    private Button mEndButton;
     private int mPosition;
     private RadioGroup mAnswersGroup;
+
+    private Callbacks mCallbacks;
+
+    public interface Callbacks{
+        void onCheckEndButtonActivity(boolean isEndButtonActive);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
+
+
 
     public static QuestionFragment newInstance(int position){
         Bundle args = new Bundle();
@@ -72,47 +82,28 @@ public class QuestionFragment extends Fragment {
         String numberString = getString(R.string.question_number, mPosition+1);
         mNumberQuestion.setText(numberString);
 
+        mCallbacks.onCheckEndButtonActivity(QuestionLab.get(getContext()).hasAllAnswer());
 
         mAnswersGroup = (RadioGroup) v.findViewById(R.id.answer_radio_group);
 
         mAnswersGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                 RadioButton button = (RadioButton) mAnswersGroup.findViewById(checkedId);
                 int index = mAnswersGroup.indexOfChild(button);
-
                 mQuestion.setHasAnswer(true);
                 mQuestion.setAnswerPosition(index);
-
-                checkEnableEndButton();
-
+                mCallbacks.onCheckEndButtonActivity(QuestionLab.get(getContext()).hasAllAnswer());
             }
         });
 
-        mEndButton = (Button) v.findViewById(R.id.end_test_button);
-        mEndButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ResultActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        checkEnableEndButton();
         return v;
     }
 
-
-    private void checkEnableEndButton(){
-        boolean isEnabled = true;
-        List<Question> questions = QuestionLab.get(getContext()).getQuestions();
-        for(Question question : questions){
-            if(!question.isHasAnswer()){
-                isEnabled = false;
-                break;
-            }
-        }
-        mEndButton.setEnabled(isEnabled);
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
+
 }

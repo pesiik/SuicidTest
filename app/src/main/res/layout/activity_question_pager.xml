@@ -11,5 +11,13 @@
 
     </android.support.v4.view.ViewPager>
 
+    <Button
+        android:id="@+id/end_test_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:enabled="false"
+        android:text="@string/end_test_button"
+        />
 
 </FrameLayout>
